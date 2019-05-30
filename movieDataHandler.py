@@ -1,18 +1,26 @@
 #!/usr/bin/python3
 from bs4 import BeautifulSoup
 from requests import *
+from classHeader import profile
 
 
-class reviewStruct:
-    def __init__ (self, movie_url):
-        self.url = movie_url
-        self.review_list = findReviews(movie_url)
 
 def findReviews(url):
-    review_url = 
-    response = get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+    for i in range(1,5):
+        review_page_url = "https://letterboxd.com" + url + "reviews/by/activity/page/" + str(i)
+        response = get(review_page_url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        try:
+            for list_element in soup.findAll("li", {"class": "film-detail"}):
+                for review in list_element.findAll("meta", itemprop="ratingValue"):
+                    rating = review["content"]
+                    print(rating)
+                for metadata in list_element.find("strong", {"class": "name"}):
+                    curr_metadata = metadata["href"]
+                    reviewer_name = metadata.text
+        except:
+            print("out of reviews: \n" + review_page_url)
 
 
-    #ASSUMING ALREADY HAVE REVIEWS
-    for review in review_list:
+
+findReviews("/film/inception/")
