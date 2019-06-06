@@ -5,7 +5,9 @@ import tempfile
 from bs4 import BeautifulSoup
 from requests import *
 import classHeader
+from movieDataHandler import findReviews
 from classHeader import titlelinkTuple, profile
+import threading
 
 
 movie_list = []
@@ -18,6 +20,11 @@ def printMovieOptions(movie_list):
         i+=1
         if(i > 10):
             break
+
+def addToMovieList(in_movie_list, movie):
+    in_movie_list.append(movie)
+    print("fetching reviews for " + movie.title + "\n")
+
 
 def makeMovieOptions(title, url):
     movie_options = []
@@ -73,5 +80,12 @@ if __name__ == "__main__":
     appendMovieList(name, movie_url)
 
     print("building user profile...")
+    threads = []
     for item in movie_list:
         print("adding " + item.title + " to profile..." + "\n")
+        curr = threading.Thread(name = item.title, target = findReviews, args = (item.link,),)
+        threads.append(curr)
+        curr.start()
+    for thread in threads:
+        print("joining " + thread.name)
+        thread.join()

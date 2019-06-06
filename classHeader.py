@@ -5,7 +5,7 @@ class reviewer:
         self.name = name
         self.link = link
         self.weight = initial_rating
-        self.movie_list = [] #movie tuples with rating, title, and link
+        self.movie_list = {} #movie title:tuples with rating, title, and link
 
 
 
